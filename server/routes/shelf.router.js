@@ -19,18 +19,6 @@ router.get('/', rejectUnauthenticated, (req, res) => {
    
 });
 
-
-// router.get('/', rejectUnauthenticated, (req, res) => {
-//     console.log('this is req.body', req.user);
-//     let queryString = `SELECT * FROM "secret" WHERE "secrecy_level" <= ($1);`
-//     pool.query(queryString, [req.user.clearance_level])
-//         .then(results => res.send(results.rows))
-//         .catch(error => {
-//             console.log('Error making SELECT for secrets:', error);
-//             res.sendStatus(500);
-//         });
-// });
-
 /**
  * Add an item for the logged in user to the shelf
  */
