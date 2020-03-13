@@ -46,11 +46,9 @@ class InfoPage extends Component {
     console.log('in handleClick, post');
     axios.post('/api/shelf', payload)
       .then(response => {
-        console.log('response is', response.data)
-        this.setState({
-          items: response.data
-        })
+        console.log('response is', response)
       });
+    this.getItems();
 
   }
 
