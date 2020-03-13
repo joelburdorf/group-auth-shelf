@@ -47,10 +47,21 @@ class InfoPage extends Component {
     axios.post('/api/shelf', payload)
       .then(response => {
         console.log('response is', response)
+        this.getItems();
       });
-    this.getItems();
-
+    
   }
+
+  deleteBtn=(event, name)=>{
+    console.log('in deleteBtn', event.target.name);
+    let id = event.target.name;
+    axios.delete(`/api/shelf/${id}`)
+      .then(response => {
+        console.log('response is', response)
+        this.getItems();
+      });
+  }
+  
 
   render() {
     return (
@@ -61,7 +72,7 @@ class InfoPage extends Component {
         <button onClick ={this.handleClick}>Add Item</button>
     <ul>
       {this.state.items &&
-      this.state.items.map(item=>(<li key={item.id}>{item.description}</li>))}
+      this.state.items.map(item=>(<li key={item.id}>{item.description}<button name={item.id} onClick={this.deleteBtn}>Delete</button></li>))}
     </ul>
  
 

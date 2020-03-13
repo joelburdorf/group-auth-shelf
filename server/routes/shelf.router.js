@@ -7,7 +7,7 @@ const { rejectUnauthenticated } = require('../modules/authentication-middleware'
  * Get all of the items on the shelf
  */
 router.get('/', rejectUnauthenticated, (req, res) => {
-   console.log('this is req.user', req.user);
+   console.log('this GET is req.user', req.user);
    let queryString = `SELECT * FROM "item" WHERE "user_id" = ($1);`
    pool.query(queryString, [req.user.id])
    .then(results => res.send(results.rows))
@@ -35,8 +35,8 @@ router.get('/', rejectUnauthenticated, (req, res) => {
  * Add an item for the logged in user to the shelf
  */
 router.post('/',rejectUnauthenticated, (req, res) => {
-    console.log('this is req.user', req.user);
-    console.log('this is req.body', req.body);
+    console.log('this is POST req.user', req.user);
+    console.log('this is POST req.body', req.body);
     let queryString = `INSERT INTO "item" ("description", "image_url", "user_id") VALUES ($1,$2,$3);`
     pool.query(queryString, [req.body.description, req.body.image_url, req.user.id])
         .then(()=>{
@@ -54,8 +54,15 @@ router.post('/',rejectUnauthenticated, (req, res) => {
 /**
  * Delete an item if it's something the logged in user added
  */
-router.delete('/:id', (req, res) => {
-
+router.delete('/:id', rejectUnauthenticated, (req, res) => {
+console.log('in delete', req.params);
+const queryText = 'DELETE FROM "item" WHERE id=$1';
+pool.query(queryText, [req.params.id])
+    .then(() => {res.sendStatus(200);})
+    .catch((err) => {
+        console.log('Error in DELETE', err);
+        res.sendStatus(500);
+    })
 });
 
 
