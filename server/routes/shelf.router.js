@@ -34,7 +34,19 @@ router.get('/', rejectUnauthenticated, (req, res) => {
 /**
  * Add an item for the logged in user to the shelf
  */
-router.post('/', (req, res) => {
+router.post('/',rejectUnauthenticated, (req, res) => {
+    console.log('this is req.user', req.user);
+    console.log('this is req.body', req.body);
+    let queryString = `INSERT INTO "item" ("description", "image_url", "user_id") VALUES ($1,$2,$3);`
+    pool.query(queryString, [req.body.description, req.body.image_url, req.user.id])
+        .then(()=>{
+            res.sendStatus(200);
+        })
+        .catch(error => {
+            console.log('error posting items', error);
+            res.sendStatus(500)
+
+        })
 
 });
 

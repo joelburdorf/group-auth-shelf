@@ -12,7 +12,11 @@ import axios from 'axios';
 
 class InfoPage extends Component {
 
-  state={items:''}
+  state={items:'',
+  objectToSend:{description:'',
+                image_url:''
+                }
+}
   componentDidMount() {
     this.getItems();
   }
@@ -26,14 +30,43 @@ class InfoPage extends Component {
       });
   }
 
+  handleChange =(event, propertyName)=>{
+    console.log(propertyName, event.target.value);
+    
+    this.setState({
+      ...this.state,
+      objectToSend:{...this.state.objectToSend,
+        [propertyName]:event.target.value}
+    })
+
+  }
+
+  handleClick=()=>{
+    let payload =  this.state.objectToSend;
+    console.log('in handleClick, post');
+    axios.post('/api/shelf', payload)
+      .then(response => {
+        console.log('response is', response.data)
+        this.setState({
+          items: response.data
+        })
+      });
+
+  }
+
   render() {
     return (
 
   <div>
+        <input onChange={(event) => this.handleChange(event, "description")} placeholder="Add Description"></input>
+        <input onChange={(event) => this.handleChange(event, "image_url")} placeholder="Add Image Url"></input>
+        <button onClick ={this.handleClick}>Add Item</button>
     <ul>
       {this.state.items &&
-      this.state.items.map(item=>(<li>{item.description}</li>))}
+      this.state.items.map(item=>(<li key={item.id}>{item.description}</li>))}
     </ul>
+ 
+
   </div>
 );
 
